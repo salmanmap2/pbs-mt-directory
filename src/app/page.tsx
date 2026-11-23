@@ -62,7 +62,7 @@ function LoginScreen({ onLogin }: { onLogin: (isNew?: boolean) => void }) {
 }
 
 export default function HomePage() {
-  const { auth, loading, logout, refetch } = useAuth();
+  const { auth, loading, refetch } = useAuth();
   const [tab, setTab] = useState<Tab>('directory');
   const deviceId = useDeviceId();
   const { testers, syncing, manualSync, updateLocalProfile } = useLocalCache(!loading && !!auth);
@@ -92,9 +92,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-bg flex flex-col">
       <header className="sticky top-0 z-40 bg-bg-card border-b border-border flex items-center justify-between px-4 py-3">
         <h1 className="text-base font-bold text-text-primary">PBS MT Directory</h1>
-        <button onClick={logout} className="text-xs text-text-secondary hover:text-white py-1 px-3 rounded-lg bg-bg-elevated">
-          Logout
-        </button>
+
       </header>
       <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
         {tab === 'directory' && <DirectoryList testers={testers} syncing={syncing} onSync={manualSync} />}
