@@ -1,13 +1,14 @@
 'use client';
-import { Home, User, Shield } from 'lucide-react';
+import { Home, User, ArrowLeftRight } from 'lucide-react';
 
-interface Props { active: 'directory' | 'profile' | 'admin'; onChange: (t: 'directory' | 'profile' | 'admin') => void; }
+type TabId = 'directory' | 'mutual' | 'profile';
+interface Props { active: TabId; onChange: (t: TabId) => void; }
 
 export function BottomNav({ active, onChange }: Props) {
   const tabs = [
-    { id: 'directory' as const, label: 'Directory', Icon: Home },
-    { id: 'profile' as const, label: 'My Profile', Icon: User },
-    { id: 'admin' as const, label: 'Admin', Icon: Shield },
+    { id: 'directory' as const, label: 'Directory',  Icon: Home },
+    { id: 'mutual'    as const, label: 'Mutual',      Icon: ArrowLeftRight },
+    { id: 'profile'   as const, label: 'My Profile',  Icon: User },
   ];
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 bg-bg-card border-t border-border lg:hidden">

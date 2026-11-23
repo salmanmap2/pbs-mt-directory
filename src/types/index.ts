@@ -2,7 +2,7 @@ export interface TesterProfile {
   _id: string;
   profilePic?: string;
   fullName: string;
-  post: 'Meter Tester' | 'Meter Testing Supervisor';
+  post: 'Meter Tester' | 'Officer (Meter Testing)';
   pbs: string;
   office: string;
   ownDistrict: string;
@@ -14,8 +14,22 @@ export interface TesterProfile {
   facebookUrl?: string;
   joiningDate: string;
   isDeleted?: boolean;
+  isLocked?: boolean;
+  editLimit?: number;
+  seniority?: number | null;
   createdAt?: string;
   updatedAt?: string;
+}
+
+export interface MutualTransferRow {
+  _id: string;
+  name: string;
+  mobileNumber: string;
+  post: string;
+  ownDistrict: string;
+  workingPbs: string;
+  mutualPossiblePbs: string;
+  createdAt?: string;
 }
 
 export interface UpdateRequest {

@@ -4,7 +4,7 @@ const TesterProfileSchema = new Schema(
   {
     profilePic: { type: String },
     fullName: { type: String, required: true },
-    post: { type: String, enum: ['Meter Tester', 'Meter Testing Supervisor'], required: true },
+    post: { type: String, enum: ['Meter Tester', 'Officer (Meter Testing)'], required: true },
     pbs: { type: String, required: true },
     office: { type: String, required: true },
     ownDistrict: { type: String, required: true },
@@ -16,6 +16,9 @@ const TesterProfileSchema = new Schema(
     facebookUrl: { type: String },
     joiningDate: { type: Date, required: true },
     isDeleted: { type: Boolean, default: false },
+    isLocked: { type: Boolean, default: false },
+    editLimit: { type: Number, default: 5, min: 0 },
+    seniority: { type: Number, default: null },
   },
   { timestamps: true }
 );
