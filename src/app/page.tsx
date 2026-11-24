@@ -7,6 +7,7 @@ import { DirectoryList } from '@/components/directory/DirectoryList';
 import { MyProfile } from '@/components/profile/MyProfile';
 import { MutualTransferTab } from '@/components/mutual/MutualTransferTab';
 import { BottomNav } from '@/components/ui/BottomNav';
+import { MobileFrame } from '@/components/ui/MobileFrame';
 import { Button } from '@/components/ui/Button';
 import type { TesterProfile } from '@/types';
 
@@ -86,20 +87,26 @@ export default function HomePage() {
     </div>
   );
 
-  if (!auth) return <LoginScreen onLogin={(isNew) => refetch()} />;
+  if (!auth) return (
+    <MobileFrame>
+      <LoginScreen onLogin={(isNew) => refetch()} />
+    </MobileFrame>
+  );
 
   return (
-    <div className="h-screen bg-bg flex flex-col overflow-hidden">
-      <main className="flex-1 min-h-0 pb-16 lg:pb-0">
-        {tab === 'directory' && <DirectoryList testers={testers} syncing={syncing} onSync={manualSync} />}
-        {tab === 'mutual'    && <MutualTransferTab />}
-        {tab === 'profile'   && (
-          myProfile
-            ? <MyProfile profile={myProfile} deviceId={deviceId} onUpdate={handleUpdate} />
-            : <div className="p-8 text-center text-text-secondary text-sm">Profile not found. Contact admin.</div>
-        )}
-      </main>
-      <BottomNav active={tab} onChange={setTab} />
-    </div>
+    <MobileFrame>
+      <div className="h-full bg-bg flex flex-col overflow-hidden">
+        <main className="flex-1 min-h-0 overflow-y-auto pb-14 lg:pb-0">
+          {tab === 'directory' && <DirectoryList testers={testers} syncing={syncing} onSync={manualSync} />}
+          {tab === 'mutual'    && <MutualTransferTab />}
+          {tab === 'profile'   && (
+            myProfile
+              ? <MyProfile profile={myProfile} deviceId={deviceId} onUpdate={handleUpdate} />
+              : <div className="p-8 text-center text-text-secondary text-sm">Profile not found. Contact admin.</div>
+          )}
+        </main>
+        <BottomNav active={tab} onChange={setTab} />
+      </div>
+    </MobileFrame>
   );
 }

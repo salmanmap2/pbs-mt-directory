@@ -24,7 +24,18 @@ export function PbsPostTable() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+    // refresh when window gets focus or tab becomes visible
+    const onFocus = () => load();
+    const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, []);
 
   // when PBS selected in modal, prefill from existing data
   const handlePbsSelect = (name: string) => {
@@ -89,8 +100,7 @@ export function PbsPostTable() {
               </thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={r._id} className={`border-b border-border hover:bg-bg-elevated cursor-pointer ${i % 2 === 0 ? '' : 'bg-bg-card/40'}`}
-                    onClick={() => { setSelPbs(r.pbsName); setForm({ zonalCount: r.zonalCount, subZonalCount: r.subZonalCount, totalOfficerMT: r.totalOfficerMT, totalMT: r.totalMT, freePost: r.freePost }); setModalOpen(true); setMsg(''); }}>
+                  <tr key={r._id} className={`border-b border-border hover:bg-bg-elevated ${i % 2 === 0 ? '' : 'bg-bg-card/40'}`}>
                     <td className="px-3 py-2 text-text-primary font-medium whitespace-nowrap">{r.pbsName}</td>
                     <td className="px-3 py-2 text-center text-text-primary tabular-nums">{n(r.zonalCount)}</td>
                     <td className="px-3 py-2 text-center text-text-primary tabular-nums">{n(r.subZonalCount)}</td>

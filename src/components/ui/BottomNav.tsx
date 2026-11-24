@@ -6,12 +6,15 @@ interface Props { active: TabId; onChange: (t: TabId) => void; }
 
 export function BottomNav({ active, onChange }: Props) {
   const tabs = [
-    { id: 'directory' as const, label: 'Directory',  Icon: Home },
-    { id: 'mutual'    as const, label: 'বদলি',      Icon: ArrowLeftRight },
-    { id: 'profile'   as const, label: 'My Profile',  Icon: User },
+    { id: 'directory' as const, label: 'Directory', Icon: Home },
+    { id: 'mutual'    as const, label: 'বদলি',     Icon: ArrowLeftRight },
+    { id: 'profile'   as const, label: 'My Profile', Icon: User },
   ];
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-bg-card border-t border-border lg:hidden">
+    // mobile: fixed to screen bottom
+    // desktop: sticky inside the frame (lg:static + parent handles layout)
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-bg-card border-t border-border
+                    lg:relative lg:bottom-auto lg:left-auto lg:right-auto lg:z-auto lg:shrink-0">
       <div className="flex">
         {tabs.map(({ id, label, Icon }) => (
           <button key={id} onClick={() => onChange(id)}
