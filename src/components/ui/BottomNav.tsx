@@ -7,7 +7,7 @@ interface Props { active: TabId; onChange: (t: TabId) => void; }
 export function BottomNav({ active, onChange }: Props) {
   const tabs = [
     { id: 'directory' as const, label: 'Directory',  Icon: Home },
-    { id: 'mutual'    as const, label: 'Mutual',      Icon: ArrowLeftRight },
+    { id: 'mutual'    as const, label: 'বদলি',      Icon: ArrowLeftRight },
     { id: 'profile'   as const, label: 'My Profile',  Icon: User },
   ];
   return (

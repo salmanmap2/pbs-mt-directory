@@ -1,51 +1,29 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { ArrowLeftRight } from 'lucide-react';
+import { ArrowLeftRight, Briefcase } from 'lucide-react';
+import { PbsPostTable } from './PbsPostTable';
 import type { MutualTransferRow } from '@/types';
 
-export function MutualTransferTab() {
-  const [rows, setRows] = useState<MutualTransferRow[]>([]);
-  const [loading, setLoading] = useState(true);
+type SubTab = 'mutual' | 'vacant';
 
-  useEffect(() => {
-    fetch('/api/mutual-transfer')
-      .then((r) => r.json())
-      .then((d) => { setRows(d); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return <div className="flex items-center justify-center py-20 text-text-secondary text-sm">Loading...</div>;
-  }
-
+/* ─── Mutual content ─── */
+function MutualContent({ rows }: { rows: MutualTransferRow[] }) {
   if (rows.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-16 text-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-bg-elevated flex items-center justify-center">
-          <ArrowLeftRight size={28} className="text-accent-blue" />
+        <div className="w-14 h-14 rounded-full bg-bg-elevated flex items-center justify-center">
+          <ArrowLeftRight size={26} className="text-accent-blue" />
         </div>
-        <h2 className="text-base font-bold text-text-primary">Mutual Transfer</h2>
         <p className="text-sm text-text-secondary leading-relaxed max-w-xs">
           আপনার প্রফাইল update করে পছন্দের PBS select করুন।
-          কয়েকদিনের মধ্যেই আমরা AI দিয়ে একটি সম্ভব Mutual মিলিয়ে দেখব এবং তা এখানে প্রকাশ করা হবে।
+          কয়েকদিনের মধ্যেই আমরা AI দিয়ে সম্ভব Mutual মিলিয়ে দেখব এবং তা এখানে প্রকাশ করা হবে।
         </p>
       </div>
     );
   }
-
   return (
     <div className="pb-4">
-      <div className="px-4 pt-4 pb-2">
-        <div className="flex items-center gap-2 mb-1">
-          <ArrowLeftRight size={16} className="text-accent-blue" />
-          <h2 className="text-sm font-bold text-text-primary">Mutual Transfer List</h2>
-          <span className="text-xs bg-accent-blue/20 text-accent-blue px-2 py-0.5 rounded-full">{rows.length}</span>
-        </div>
-        <p className="text-xs text-text-secondary">Joining date অনুযায়ী সম্ভাব্য mutual transfer তালিকা</p>
-      </div>
-
-      {/* Mobile cards */}
-      <div className="px-3 space-y-2 sm:hidden">
+      <div className="px-3 pt-3 space-y-2 sm:hidden">
         {rows.map((r) => (
           <div key={r._id} className="bg-bg-card rounded-xl p-3 border border-border">
             <div className="flex items-start justify-between gap-2 mb-2">
@@ -74,10 +52,8 @@ export function MutualTransferTab() {
           </div>
         ))}
       </div>
-
-      {/* Desktop table */}
-      <div className="hidden sm:block overflow-x-auto px-3">
-        <table className="w-full text-sm mt-2">
+      <div className="hidden sm:block overflow-x-auto px-3 pt-3">
+        <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-border text-xs text-text-secondary uppercase tracking-wide">
               <th className="text-left px-3 py-2.5">Name</th>
@@ -93,9 +69,7 @@ export function MutualTransferTab() {
               <tr key={r._id} className="border-b border-border hover:bg-bg-elevated">
                 <td className="px-3 py-2.5 font-medium text-text-primary whitespace-nowrap">{r.name}</td>
                 <td className="px-3 py-2.5 text-text-secondary">{r.mobileNumber}</td>
-                <td className="px-3 py-2.5 text-text-secondary whitespace-nowrap">
-                  {r.post === 'Meter Tester' ? 'MT' : 'Officer-MT'}
-                </td>
+                <td className="px-3 py-2.5 text-text-secondary whitespace-nowrap">{r.post === 'Meter Tester' ? 'MT' : 'Officer-MT'}</td>
                 <td className="px-3 py-2.5 text-text-secondary">{r.ownDistrict}</td>
                 <td className="px-3 py-2.5 text-text-secondary whitespace-nowrap">{r.workingPbs}</td>
                 <td className="px-3 py-2.5 text-accent-blue font-semibold whitespace-nowrap">{r.mutualPossiblePbs}</td>
@@ -103,6 +77,59 @@ export function MutualTransferTab() {
             ))}
           </tbody>
         </table>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main component ─── */
+export function MutualTransferTab() {
+  const [subTab, setSubTab]       = useState<SubTab>('mutual');
+  const [mutualRows, setMutualRows] = useState<MutualTransferRow[]>([]);
+  const [loading, setLoading]     = useState(true);
+
+  useEffect(() => {
+    fetch('/api/mutual-transfer')
+      .then((r) => r.json())
+      .then((d) => { setMutualRows(Array.isArray(d) ? d : []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <div className="flex items-center justify-center py-20 text-text-secondary text-sm">Loading...</div>;
+  }
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      {/* Sub-tabs */}
+      <div className="sticky top-0 z-30 bg-bg-card border-b border-border flex">
+        <button onClick={() => setSubTab('mutual')}
+          className={`flex-1 py-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 ${
+            subTab === 'mutual'
+              ? 'text-accent-blue border-b-2 border-accent-blue'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}>
+          <ArrowLeftRight size={14} />
+          Mutual
+          <span className={`text-xs px-1.5 py-0.5 rounded-full ${subTab === 'mutual' ? 'bg-accent-blue/20 text-accent-blue' : 'bg-bg-elevated text-text-secondary'}`}>
+            {mutualRows.length}
+          </span>
+        </button>
+        <button onClick={() => setSubTab('vacant')}
+          className={`flex-1 py-2.5 text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 ${
+            subTab === 'vacant'
+              ? 'text-emerald-400 border-b-2 border-emerald-400'
+              : 'text-text-secondary hover:text-text-primary'
+          }`}>
+          <Briefcase size={14} />
+          শূন্য পদ
+        </button>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        {subTab === 'mutual' && <MutualContent rows={mutualRows} />}
+        {subTab === 'vacant' && <PbsPostTable />}
       </div>
     </div>
   );

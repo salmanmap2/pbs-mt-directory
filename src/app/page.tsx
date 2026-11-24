@@ -89,12 +89,8 @@ export default function HomePage() {
   if (!auth) return <LoginScreen onLogin={(isNew) => refetch()} />;
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col">
-      <header className="sticky top-0 z-40 bg-bg-card border-b border-border flex items-center justify-between px-4 py-3">
-        <h1 className="text-base font-bold text-text-primary">PBS MT Directory</h1>
-
-      </header>
-      <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
+    <div className="h-screen bg-bg flex flex-col overflow-hidden">
+      <main className="flex-1 min-h-0 pb-16 lg:pb-0">
         {tab === 'directory' && <DirectoryList testers={testers} syncing={syncing} onSync={manualSync} />}
         {tab === 'mutual'    && <MutualTransferTab />}
         {tab === 'profile'   && (

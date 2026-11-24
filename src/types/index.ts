@@ -32,6 +32,27 @@ export interface MutualTransferRow {
   createdAt?: string;
 }
 
+export interface PbsPostRow {
+  _id: string;
+  pbsName: string;
+  zonalCount: number;
+  subZonalCount: number;
+  totalOfficerMT: number;
+  totalMT: number;
+  freePost: number;
+  updatedAt?: string;
+}
+
+export interface VacantPostRow {
+  _id: string;
+  pbs: string;
+  office: string;
+  post: string;
+  vacantCount: number;
+  note?: string;
+  createdAt?: string;
+}
+
 export interface UpdateRequest {
   _id: string;
   testerId: TesterProfile | string;
